@@ -19,7 +19,39 @@ dim3 blocks3D( 5, 5, 5 );
 Kernel invocation
 __global__ void kernel( ... ) { ... }
 
-dim3 blocks( nx, ny, nz );           // cuda 1.x has 1D and 2D grids, cuda 2.x adds 3D grids
+dimy gement
+__device__ float* pointer;
+cudaMalloc( (void**) &pointer, size );
+cudaFree( pointer );
+
+__constant__ float dev_data[n];
+float host_data[n];
+cudaMemcpyToSymbol  ( dev_data,  host_data, sizeof(host_data) );  // dev_data  = host_data
+cudaMemcpyFromSymbol( host_data, dev_data,  sizeof(host_data) );  // host_data = dev_data
+
+// direction is one of cudaMemcpyHostToDevice or cudaMemcpyDeviceToHost
+cudaMemcpy     ( dst_pointer, src_pointer, size, direction );
+cudaMemcpyAsync( dst_pointer, src_pointer, size, direction, stream );
+
+// using column-wise notation
+// (the CUDA docs describe it for images; a “row” there equals a matrix column)
+// _bytes indicates arguments that must be specified in bytes
+cudaMemcpy2D     ( A_dst, lda_bytes, B_src, ldb_bytes, m_bytes, n, direction );
+cudaMemcpy2DAsync( A_dst, lda_bytes, B_src, ldb_bytes, m_bytes, n, direction, stream );
+
+// cublas makes copies easier for matrices, e.g., less use of sizeof
+// copy x => y
+cublasSetVector     ( n, elemSize, x_src_host, incx, y_dst_dev,  incy );
+cublasGetVector     ( n, elemSize, x_src_dev,  incx, y_dst_host, incy );
+cublasSetVectorAsync( n, elemSize, x_src_host, incx, y_dst_dev,  incy, stream );
+cublasGetVectorAsync( n, elemSize, x_src_dev,  incx, y_dst_host, incy, stream );
+
+// copy A => B
+cublasSetMatrix     ( rows, cols, elemSize, A_src_host, lda, B_dst_dev,  ldb );
+cublasGetMatrix     ( rows, cols, elemSize, A_src_dev,  lda, B_dst_host, ldb );
+cublasSetMatrixAsync( rows, cols, elemSize, A_src_host, lda, B_dst_dev,  ldb, stream );
+cublasGetMatrixAsync( rows, cols, elemSize, A_src_dev,  lda, B_dst_host, ldb, stream );
+Also, malloc and free work inside a kernel (2.x), but memory allocated in a kernel must be deallocated in a kernel (not the host). It can be freed in a different kernel, though.blocks( nx, ny, nz );           // cuda 1.x has 1D and 2D grids, cuda 2.x adds 3D grids
 dim3 threadsPerBlock( mx, my, mz );  // cuda 1.x has 1D, 2D, and 3D blocks
 
 kernel<<< blocks, threadsPerBlock >>>( ... );
