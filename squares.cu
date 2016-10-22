@@ -3,7 +3,9 @@
 #include "book.h"
 __global__ void square(int* a, int N)
 {
-
+	//calculate the unique thread index 
+	int tId = blockIdx.x * blockDim.x + threadIdx.x;
+	a[tId] = a[tId] * a[tId];
 }
 
 int  main (){
