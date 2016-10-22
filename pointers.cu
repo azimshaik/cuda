@@ -1,4 +1,4 @@
-//Program for squaring numbers in  an array on NVIOIA device
+//Pointers test
 #include <stdio.h>
 #include "book.h"
 
