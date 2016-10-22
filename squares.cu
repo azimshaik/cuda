@@ -6,7 +6,8 @@ __global__ void square(int* a, int N)
 	//calculate the unique thread index
 	//blockIdx * blockDim + threadIdx
 	int tId = blockIdx.x * blockDim.x + threadIdx.x;
-	a[tId] = a[tId] * a[tId];
+
+	if(tId<N) a[tId] = a[tId] * a[tId];
 }
 
 int  main (){
@@ -26,10 +27,21 @@ int  main (){
 	//block size and dimentions
 	int blocksize = 4;
 	int num_of_blocks = N/blocksize + (N%blocksize == 0 ? 0:1);
+	int k;
+        for (k = 0 ; k<N ; k++)
+        {
+                printf("The square of %d is %d \n",k, array_host[k]);;
+        }
 	//Kernell(deice call)
 	square<<<num_of_blocks, blocksize>>>(array_device,N);
 	//copy back the results from the device to host 
-	cudaMemcpy(array_host,array_device,sizeof(int)*int, cudaMemcpyDeviceToHost);
-	
+	cudaMemcpy(array_host,array_device,sizeof(int)*N, cudaMemcpyDeviceToHost);
+	int j;
+	for (j = 0 ; j<N ; j++)
+	{
+		printf("The square of %d is %d \n",j, array_host[j]);;
+	}
+	free(array_host);
+	cudaFree(array_device);
 }
 
