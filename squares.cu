@@ -1,6 +1,10 @@
 //Program for squaring numbers in  an array on NVIOIA device
 #include <stdio.h>
 #include "book.h"
+__global__ void square(int* a, int N)
+{
+
+}
 
 int  main (){
 	
