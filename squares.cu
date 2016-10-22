@@ -27,5 +27,7 @@ int  main (){
 	int num_of_blocks = N/blocksize + (N%blocksize == 0 ? 0:1);
 	//Kernell(deice call)
 	square<<<num_of_blocks, blocksize>>>(array_device,N);
+	//copy back the results from the device to host 
+	cudaMemcpy(array_host,array_device,sizeof(int)*int, cudaMemcpyDeviceToHost);
 }
 
