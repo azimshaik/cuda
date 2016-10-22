@@ -20,6 +20,6 @@ int  main (){
 	int blocksize = 4;
 	int num_of_blocks = N/blocksize + (N%blocksize == 0 ? 0:1);
 	//Kernell(deice call)
-
+	square<<<num_of_blocks, blocksize>>>(array_device,N);
 }
 
