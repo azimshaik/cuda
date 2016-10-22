@@ -3,7 +3,8 @@
 #include "book.h"
 __global__ void square(int* a, int N)
 {
-	//calculate the unique thread index 
+	//calculate the unique thread index
+	//blockIdx * blockDim + threadIdx
 	int tId = blockIdx.x * blockDim.x + threadIdx.x;
 	a[tId] = a[tId] * a[tId];
 }
@@ -29,5 +30,6 @@ int  main (){
 	square<<<num_of_blocks, blocksize>>>(array_device,N);
 	//copy back the results from the device to host 
 	cudaMemcpy(array_host,array_device,sizeof(int)*int, cudaMemcpyDeviceToHost);
+	
 }
 
