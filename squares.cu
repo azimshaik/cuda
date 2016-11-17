@@ -1,13 +1,14 @@
 //Program for squaring numbers in  an array on NVIOIA device
 #include <stdio.h>
 #include "book.h"
+#include <math.h>
 __global__ void square(int* a, int N)
 {
 	//calculate the unique thread index
 	//blockIdx * blockDim + threadIdx
 	int tId = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if(tId<N) a[tId] = a[tId] * a[tId];
+	if(tId<N) a[tId] = a[tId] + a[tId];
 }
 
 int  main (){
