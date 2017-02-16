@@ -8,7 +8,7 @@ __global__ void square(int* a, int N)
 	//blockIdx * blockDim + threadIdx
 	int tId = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if(tId<N) a[tId] = a[tId] + a[tId];
+	if(tId<N) a[tId] = a[tId] * a[tId];
 }
 
 int  main (){
@@ -23,7 +23,7 @@ int  main (){
 		array_host[i] = i;
 		printf("array_host:%d \n ",array_host[i]);
 	}
-	int size = N;
+	int size = N*sizeof(int);
 	cudaMemcpy(array_device, array_host,size,cudaMemcpyHostToDevice);
 	//block size and dimentions
 	int blocksize = 4;
